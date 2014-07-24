@@ -11,6 +11,7 @@
  * @license   http://www.gnu.org/licenses/gpl-2.0.html GPLv2
  * @link      http://www.familycms.com/wiki/
  */
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
 session_start();
 
 define('URL_PREFIX', '');

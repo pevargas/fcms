@@ -12,7 +12,9 @@
  * @link      http://www.familycms.com/wiki/
  * @since     2.3
  */
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 define('URL_PREFIX', '');
 define('GALLERY_PREFIX', 'gallery/');

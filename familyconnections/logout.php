@@ -1,5 +1,7 @@
 <?php 
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 unset($_SESSION['fcms_id']);
 unset($_SESSION['fcms_token']);
 session_destroy(); // destroy fb data

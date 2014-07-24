@@ -2,7 +2,9 @@
 // TODO
 // Move this file out of inc/ and possibly rename it.
 
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 define('URL_PREFIX', '../');
 define('GALLERY_PREFIX', '../gallery/');

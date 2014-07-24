@@ -8,7 +8,9 @@
  */
 
 // Keep FCMS session
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 // Show all errors:
 error_reporting(E_ALL);

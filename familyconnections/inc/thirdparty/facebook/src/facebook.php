@@ -46,7 +46,9 @@ class Facebook extends BaseFacebook
    */
   public function __construct($config) {
     if (!session_id()) {
-      session_start();
+      session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
     }
     parent::__construct($config);
     if (!empty($config['sharedSession'])) {

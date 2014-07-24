@@ -18,7 +18,9 @@ if (!isset($_GET['id']))
     return;
 }
 
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 define('URL_PREFIX', '../');
 define('GALLERY_PREFIX', '');

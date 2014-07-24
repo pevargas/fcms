@@ -1,6 +1,8 @@
 <?php
 require_once('vimeo.php');
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 // Create the object and enable caching
 $vimeo = new phpVimeo('CONSUMER_KEY', 'CONSUMER_SECRET');
@@ -9,7 +11,9 @@ $vimeo->enableCache(phpVimeo::CACHE_FILE, './cache', 300);
 // Clear session
 if ($_GET['clear'] == 'all') {
     session_destroy();
-    session_start();
+    session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 }
 
 // Set up variables

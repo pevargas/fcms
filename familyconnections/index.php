@@ -28,7 +28,9 @@
  * @link      http://www.familycms.com/wiki/
  */
 
-session_start();
+session_save_path("/home/users/web/b1310/ipg.schuetteprobstreunio/cgi-bin/tmp");
+session_start(); 
+
 
 // Site has NOT been installed yet
 if (!file_exists('inc/config_inc.php'))
