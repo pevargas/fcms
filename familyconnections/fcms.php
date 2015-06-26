@@ -20,6 +20,7 @@ require_once 'inc/constants.php';
 require_once 'inc/Error.php';
 require_once 'inc/User.php';
 require_once 'inc/Database.php';
+require_once 'analyticstracking.php';
 
 error_reporting(-1);
 ini_set('log_errors', 0);
