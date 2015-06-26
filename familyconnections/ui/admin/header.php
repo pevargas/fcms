@@ -11,7 +11,7 @@
 <?php if (isset($TMPL['javascript'])) { echo $TMPL['javascript']; } ?>
 </head>
 <body id="top">
-
+   <?php include_once("analyticstracking.php") ?>
     <div class="topbar">
         <div class="fill">
             <div class="container">

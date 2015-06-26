@@ -13,7 +13,7 @@
 <?php if (isset($TMPL['javascript'])) { echo $TMPL['javascript']; } ?>
 </head>
 <body id="top">
-
+   <?php include_once("analyticstracking.php") ?>
     <div id="header">
         <div id="logo">
             <a href="<?php echo $TMPL['path']; ?>index.php">
