@@ -673,7 +673,7 @@ class Calendar
                 $data = $d;
                 if (in_array($d, $eventDays))
                 {
-                    $data = '<a href="calendar.php?year='.$year.'&amp;month='.$month.'&amp;day='.$d.'">'.$d.'</a>';
+                    $data = '<a href="calendar.php?year='.$year.'&amp;month='.$month.'&amp;day='.$d.'&amp;view=day">'.$d.'</a>';
                 }
 
                 $weekData[] = array(
@@ -795,6 +795,7 @@ class Calendar
 
                 $age = getAge($r['dob_year'], $r['dob_month'], $r['dob_day'], "$year-$month-".$r['dob_day']);
 
+                $r['created_by'] = $r['id'];
                 $r['id']         = 'birthday'.$r['id'];
                 $r['day']        = $r['dob_month'].$r['dob_day'];
                 $r['date']       = $r['dob_year'].'-'.$r['dob_month'].'-'.$r['dob_day'];
@@ -802,7 +803,6 @@ class Calendar
                 $r['desc']       = sprintf(T_('%s turns %s today.'), $r['fname'], $age);
                 $r['private']    = 0;
                 $r['repeat']     = 'yearly';
-                $r['created_by'] = $r['id'];
 
                 $events[] = $r;
             }
@@ -865,7 +865,7 @@ class Calendar
                 $desc  = cleanOutput($desc);
 
                 $eventData[] = array(
-                    'id'    => (int)$row['id'],
+                    'id'    => startsWith($row['id'], 'birthday') ? $row['id'] : (int)$row['id'],
                     'title' => $title,
                     'desc'  => $desc,
                     'date'  => formatDate(T_('M. d'), $row['date']),
@@ -1501,7 +1501,7 @@ class Calendar
                                     '.buildHtmlSelectOptions($times, $defaultTimeEnd).'
                                 </select> &nbsp;
                                 <input id="all-day" name="all-day" type="checkbox" 
-                                    onclick="toggleDisable($(\'timestart\'), $(\'timeend\'))"/>
+                                    onclick="toggleDisable($(\'#timestart\'), $(\'#timeend\'))"/>
                                 <label for="all-day">'.T_('All Day').'</label> 
                             </div>
                         </div>
@@ -1678,7 +1678,7 @@ class Calendar
                                 '.buildHtmlSelectOptions($times, $row['time_end']).'
                             </select> &nbsp;
                             <input id="all-day" named="all-day" type="checkbox" 
-                                onclick="toggleDisable($(\'timestart\'), $(\'timeend\'))" '.$allDayChk.'/>
+                                onclick="toggleDisable($(\'#timestart\'), $(\'#timeend\'))" '.$allDayChk.'/>
                             <label for="all-day">'.T_('All Day').'</label> 
                         </div>
                     </div>

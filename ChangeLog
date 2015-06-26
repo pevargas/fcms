@@ -1,3 +1,31 @@
+  3.5.1
+    #405 - Upgrade Ajax Chat to latest version
+    #424 - Members cannot add to family tree
+    #465 - CHAT ERROR: error on line 2 at column 1: Extra content at the end of the document
+    #471 - Cannot edit Family Tree (non admin)
+    #486 - Account - Undefined index: advanced_tagging
+    #487 - Admin: Can't edit user profiles
+    #488 - Turning site off causes php errors
+    #494 - Fix unauthorized photo/file access
+    #495 - Unauthorized users can see protected photos
+    #496 - Deny access to non-admin users on Youtube and Instagram config pages
+    #499 - Fix hard-coded URLS for no_avatar.jpg
+    #500 - Change gravatar URL to be compatible with both HTTP and HTTPS sites
+
+  3.5.0
+    #407 - Move from Prototype to jQuery
+    #441 - HTML5 YouTube videos
+    #450 - Memory error on Family Tree with a lot of relatives
+    #452 - Upgrade plupload to 2.1.1
+    #454 - PHP Error pre_replace(): The /e modifier is deprecated
+    #472 - PhotoDestination issue when uploading instagram
+    #473 - Foursquare API needs updated
+
+  3.4.2
+    #457 - Photos not deleted from server in Admin
+    #463 - PHP Error for comments on protected images in newsstream
+    #467 - Birthday links do not work on home page.
+
   3.4.1
     #453 - Family Tree Picture Error
     #455 - Couple without children cause errors.

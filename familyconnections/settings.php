@@ -254,11 +254,11 @@ class Page
      * 
      * Displays the header of the page, including the leftcolumn navigation.
      * 
-     * @param string $js Allows you to overwrite the javascript that is included in the header.
+     * @param array $options
      * 
      * @return void
      */
-    function displayHeader ($js = '')
+    function displayHeader ($options = null)
     {
         $params = array(
             'currentUserId' => $this->fcmsUser->id,
@@ -272,23 +272,7 @@ class Page
             'year'          => date('Y')
         );
 
-        $params['javascript'] = $js;
-
-        // Default js
-        if ($js == '')
-        {
-            $params['javascript'] = '
-<script type="text/javascript">
-//<![CDATA[ 
-Event.observe(window, \'load\', function() {
-    initChatBar(\''.T_('Chat').'\', \''.URL_PREFIX.'\');
-    initAdvancedTagging();
-});
-//]]>
-</script>';
-        }
-
-        loadTemplate('global', 'header', $params);
+        displayPageHeader($params, $options);
 
         echo '
             <div id="leftcolumn">
@@ -505,14 +489,11 @@ a:hover { background-color: #6cd163; }
      */
     function displayEditTheme ()
     {
-        $js = '
-<script type="text/javascript">
-Event.observe(window, \'load\', function() {
-    deleteConfirmationLinks("del_theme", "'.T_('Are you sure you want to DELETE this theme?').'");
-});
-</script>';
-
-        $this->displayHeader($js);
+        $this->displayHeader(
+            array(
+                'jsOnload' => 'deleteConfirmationLinks("del_theme", "'.T_('Are you sure you want to DELETE this theme?').'");',
+            )
+        );
         $this->fcmsSettings->displayTheme();
         $this->displayFooter();
 
@@ -603,6 +584,13 @@ Event.observe(window, \'load\', function() {
     function displayEditSettings ()
     {
         $this->displayHeader();
+
+        if (isset($_SESSION['success']))
+        {
+            displayOkMessage();
+            unset($_SESSION['success']);
+        }
+
         $this->fcmsSettings->displaySettings();
         $this->displayFooter();
 
@@ -616,17 +604,10 @@ Event.observe(window, \'load\', function() {
      */
     function displayEditSettingsSubmit ()
     {
-        $this->displayHeader();
-
         $sql = "UPDATE `fcms_user_settings` SET ";
 
         $params = array();
 
-        if ($_POST['advanced_tagging'])
-        {
-            $sql     .= "`advanced_tagging` = ?, ";
-            $params[] = $_POST['advanced_tagging'] == 'yes' ? 1 : 0;
-        }
         if ($_POST['language'])
         {
             $sql     .= "`language` = ?, ";
@@ -662,16 +643,16 @@ Event.observe(window, \'load\', function() {
         {
             if (!$this->fcmsDatabase->update($sql, $params))
             {
+                $this->displayHeader();
                 $this->fcmsError->displayError();
                 $this->displayFooter();
                 return;
             }
-
-            displayOkMessage();
         }
 
-        $this->fcmsSettings->displaySettings();
-        $this->displayFooter();
+        $_SESSION['success'] = 1;
+
+        header("Location: settings.php?view=settings");
     }
 
     /**
@@ -729,7 +710,7 @@ Event.observe(window, \'load\', function() {
      */
     function displayEditPhotoGallery ()
     {
-        $this->displayHeader();
+        $this->displayHeader(array('jsOnload' => 'initAdvancedTagging();'));
         $this->fcmsSettings->displayPhotoGallerySettings();
         $this->displayFooter();
 
@@ -1216,7 +1197,7 @@ Event.observe(window, \'load\', function() {
 
             $user    = '<a href="http://foursquare.com/user/'.$self->response->user->id.'">'.$self->response->user->contact->email.'</a>';
             $status  = sprintf(T_('Currently connected as: %s'), $user);
-            $status .= '<br/><br/><img src="'.$self->response->user->photo.'"/>';
+            $status .= '<br/><br/><img src="'.$self->response->user->photo->prefix.'80x80'.$self->response->user->photo->suffix.'"/>';
             $link    = '<a class="disconnect" href="?revoke=foursquare">'.T_('Disconnect').'</a>';
         }
         else

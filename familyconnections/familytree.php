@@ -226,8 +226,8 @@ class Page
             return;
         }
 
-        // If this is a real user, and you are not an admin, you can't edit it
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';
             $this->displayFooter();
@@ -260,7 +260,8 @@ class Page
             return;
         }
 
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             $this->displayHeader();
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';
@@ -522,8 +523,8 @@ class Page
             return;
         }
 
-        // If this is a real user, and you are not an admin, you can't edit it
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';
             $this->displayFooter();
@@ -713,7 +714,8 @@ class Page
         $user    = $users[0];
         $relUser = $users[1];
 
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             $this->displayHeader();
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';
@@ -834,6 +836,20 @@ class Page
                 </li>
             </ul>
         </div>';
+
+        // We may have run out of memory before we could print everyone
+        // Let's notify the user of that
+        if (!$this->fcmsFamilyTree->hasEnoughMemory)
+        {
+            echo '
+        <script type="text/javascript">
+            $("#familytree-page").prepend("<div class=\"info-alert\">"
+                + "<h2>'.T_('Out of Memory').'</h2>"
+                + "<p>'.T_('Your current PHP configuration does not allow displaying of a Family Tree this large, so not all relationships are shown.').'</p>"
+                + "<p>'.T_('Please consider allocating more memory to PHP.').'</p>"
+            + "</div>");
+        </script>';
+        }
 
         $this->displayFooter();
     }
@@ -1098,7 +1114,7 @@ class Page
         echo '<li><a id="child" href="?view='.$userId.'&add='.$userId.'&type=child">'.T_('Child').'</a></li>';
         echo '</ul>';
         echo '<script type="text/javascript">';
-        echo '$$("#add_relative_menu .close").each(function(el) { el.observe("click", function() { $("add_relative_menu").remove(); }); });';
+        echo '$("#add_relative_menu .close").each(function() { $(this).click(function() { $("#add_relative_menu").remove(); }); });';
         echo '</script>';
     }
 
@@ -1124,8 +1140,8 @@ class Page
             return;
         }
 
-        // If this is a real user, and you are not an admin, you can't edit it
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';
             $this->displayFooter();
@@ -1168,8 +1184,8 @@ class Page
             return;
         }
 
-        // If this is a real user, and you are not an admin, you can't edit it
-        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1)
+        // If this is a real user, and you are not an admin, you can't edit it and this user isn't you
+        if ($user['phpass'] != 'NONMEMBER' && $this->fcmsUser->access != 1 && $user['id'] != $this->fcmsUser->id)
         {
             $this->displayHeader();
             echo '<div class="error-alert">'.T_('You do not have permission to perform this task.').'</div>';

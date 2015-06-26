@@ -998,7 +998,8 @@ function parse_bbcodes ($data)
         '<span>$1</span>', 
         '<span class="$1">$2</span>',
         '<blockquote>$1</blockquote>',
-        'unhtmlentities("\\1")'
+        '<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/$1" allowfullscreen frameborder="0"></iframe>',
+        '<iframe class="youtube-player" type="text/html" width="640" height="385" src="http://www.youtube.com/embed/$1" allowfullscreen frameborder="0"></iframe>'
     );
     $data = preg_replace ($search, $replace, $data);
     return $data; 
@@ -1039,6 +1040,7 @@ function removeBBCode ($str)
         '$2', // span
         '$1', // quote
         '',   // video
+        ''    // video
     );
     return preg_replace($search, $replace, stripslashes($str));
 }
@@ -1077,7 +1079,8 @@ function getBBCodeList ()
         '/\[span\](.*?)\[\/span\]/is', 
         '/\[span\=(.*?)\](.*?)\[\/span\]/is', 
         '/\[quote\](.*?)\[\/quote\]/is', 
-        '/\[video\](.*?)\[\/video\]/ise'
+        '/\[video\](?:http(?:s)?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:(?:watch)?\?(?:.*&)?v(?:i)?=|(?:embed|v|vi|user)\/))([^\?&\"\'>]+)\[\/video\]/is',
+        '/\[video\]([^\?&\"\'>]+)\[\/video\]/is'
     );
 }
 
@@ -1098,7 +1101,7 @@ function parse_smilies ($data)
     {
         $data = str_replace(
             $smiley_array[$i], 
-            '<img src="'.URL_PREFIX.'ui/smileys/'.$smiley_file_array[$i].'" alt="'.$smiley_array[$i].'"/>', 
+            '<img src="'.URL_PREFIX.'ui/img/smileys/'.$smiley_file_array[$i].'" alt="'.$smiley_array[$i].'"/>', 
             $data
         );
 
@@ -1149,7 +1152,7 @@ function displaySmileys ()
     $previous_smiley_file = '';
     foreach ($smiley_array as $smiley) {
         if ($smiley_file_array[$i] != $previous_smiley_file) {
-            echo '<div class="smiley"><img src="../ui/smileys/' . $smiley_file_array[$i] . '" alt="' . $smiley . '" onclick="return addSmiley(\''.str_replace("'", "\'", $smiley).'\')" /></div>';
+            echo '<div class="smiley"><img src="'.URL_PREFIX.'ui/img/smileys/' . $smiley_file_array[$i] . '" alt="' . $smiley . '" onclick="return addSmiley(\''.str_replace("'", "\'", $smiley).'\')" /></div>';
             $previous_smiley_file = $smiley_file_array[$i];
         }
         $i++;
@@ -2292,10 +2295,9 @@ function displayOkMessage ($msg = '', $timeout = 0)
     }
 
     echo '
-        <script type="text/javascript" src="'.URL_PREFIX.'ui/js/scriptaculous.js"></script>
         <div id="'.$id.'" class="ok-msg-container" style="display:none">
             <div class="ok-msg">
-                <a class="close-msg" href="#" onclick="Effect.Fade(\''.$id.'\')" title="'.T_('Close Message').'">x</a>
+                <a class="close-msg" href="#" onclick="$(\'#'.$id.'\').fadeOut(\'slow\')" title="'.T_('Close Message').'">x</a>
                 '.$msg.'
             </div>
         </div>
@@ -2307,9 +2309,49 @@ function displayOkMessage ($msg = '', $timeout = 0)
         </style>
         </noscript>
         <script type="text/javascript">
-            Event.observe(window, \'load\', function() {
-                Effect.BlindDown(\''.$id.'\');
-                var t=setTimeout("Effect.Fade(\''.$id.'\')",'.$timeout.'); 
+            $(document).ready(function() {
+                $("#'.$id.'").slideDown("'.$id.'");
+                var t=setTimeout("$(\'#'.$id.'\').fadeOut(\'slow\')", '.$timeout.'); 
+            });
+        </script>';
+}
+
+/**
+ * displayOKMessageAdmin 
+ * 
+ * This is temporary and needs to be removed once we move everything
+ * to bootstrap templates.
+ * 
+ * @param string $msg     defaults to 'Changes Updated Successfully.'
+ * @param int    $timeout defaults to 4000 ms
+ * 
+ * @return void
+ */
+function displayOKMessageAdmin ($msg = '', $timeout = 0)
+{
+    $id = 'msg-'.time();
+
+    if (empty($msg))
+    {
+        $msg = T_('Changes Updated Successfully.');
+    }
+
+    if ($timeout <= 0)
+    {
+        $timeout = '4000';
+    }
+
+    echo '
+        <div id="'.$id.'" class="alert-message success" style="display:none">
+            <a class="close" href="#" onclick="$(\'#'.$id.'\').fadeOut(\'slow\')" title="'.T_('Close Message').'">x</a>
+            <p>
+                '.$msg.'
+            </p>
+        </div>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("#'.$id.'").fadeIn("'.$id.'");
+                var t=setTimeout("$(\'#'.$id.'\').fadeOut(\'slow\')", '.$timeout.'); 
             });
         </script>';
 }
@@ -3295,10 +3337,10 @@ function getAdditionalWhatsNewData ($whatsNewData)
                 $whatsNewData[$key]['type'] = 'STATUSCOM';
             }
         }
-        // See if this is a new status update or reply
         elseif ($data['type'] == 'GALCOM')
         {
             $photo = array(
+                'id'       => $data['id'],
                 'user'     => $data['id2'],
                 'filename' => $data['id3'],
             );
@@ -3375,7 +3417,7 @@ function getFoursquareWhatsNewData ($whatsNewData)
 
     if (count($users[0]) > 0)
     {
-        $timeago = gmmktime(0, 0, 0, gmdate('m'), gmdate('d')-$days, gmdate('Y'));
+        $timeago = gmmktime(0, 0, 0, gmdate('m'), gmdate('d'), gmdate('Y'));
 
         $i = 0;
         foreach ($users as $k => $data)
@@ -3851,11 +3893,7 @@ function getAvatarPath ($avatar, $gravatar)
 {
     if ($avatar === 'gravatar')
     {
-        return 'http://www.gravatar.com/avatar.php?gravatar_id='.md5(strtolower($gravatar)).'&amp;s=80';
-    }
-    else if ($avatar === 'no_avatar.jpg')
-    {
-        return URL_PREFIX.'uploads/avatar/no_avatar.jpg';
+        return '//www.gravatar.com/avatar.php?gravatar_id='.md5(strtolower($gravatar)).'&amp;s=80';
     }
 
     $fcmsError    = FCMS_Error::getInstance();
@@ -4830,8 +4868,11 @@ function usingFullSizePhotos ()
 /**
  * displayPageHeader 
  * 
- * @param array $params
- * @param array $options 
+ * @param array $params  params are passed to loadTemplate()
+ * @param array $options can be one of the following:
+ *                        js       - js functions, global vars
+ *                        jsOnload - js that must be run onload
+ *                        modules  - an array of modules to load
  * 
  * @return void
  */
@@ -4858,7 +4899,7 @@ function displayPageHeader ($params, $options = null)
     // Set onload javascript
     $params['javascript'] .= '
     <script type="text/javascript">
-    Event.observe(window, "load", function() {
+    $(document).ready(function() {
         initChatBar("'.T_('Chat').'", "'.$params['path'].'");
         '.$jsOnload.'
     });
@@ -4876,10 +4917,12 @@ function displayPageHeader ($params, $options = null)
 function getModuleList ()
 {
     return array(
-        'livevalidation'    => '<script type="text/javascript" src="ui/js/livevalidation.js"></script>',
-        'datechooser'       => '<link rel="stylesheet" type="text/css" href="ui/datechooser.css"/>'
-                              .'<script type="text/javascript" src="ui/js/datechooser.js"></script>',
-        'scriptaculous'     => '<script type="text/javascript" src="ui/js/scriptaculous.js"></script>',
+        'livevalidation'    => '<script type="text/javascript" src="'.URL_PREFIX.'ui/js/livevalidation.js"></script>',
+        'datechooser'       => '<link rel="stylesheet" type="text/css" href="ui/css/datechooser.css"/>'
+                              .'<script type="text/javascript" src="'.URL_PREFIX.'ui/js/datechooser.js"></script>',
+        'scriptaculous'     => '<script type="text/javascript" src="'.URL_PREFIX.'ui/js/scriptaculous.js"></script>',
+        'autocomplete'      => '<script type="text/javascript" src="'.URL_PREFIX.'ui/js/autocomplete/jquery.autocomplete.min.js"></script>',
+        'tablesorter'       => '<script type="text/javascript" src="'.URL_PREFIX.'ui/js/tablesorter/js/jquery.tablesorter.min.js"></script>',
     );
 }
 
@@ -5076,4 +5119,31 @@ function getFamilyTreeClassName ()
     }
 
     return $className;
+}
+
+/**
+ * getMemoryLimitBytes 
+ * 
+ * Will get the current memory limit in bytes.
+ * 
+ * @return integer
+ */
+function getMemoryLimitBytes ()
+{
+    $memory = ini_get('memory_limit');
+    $size   = substr($memory, -1);
+    $memory = substr($memory, 0, -1);
+
+    // KB
+    if ($size == 'K')
+    {
+        $memory = ($memory * 1024);
+    }
+    // MB
+    else
+    {
+        $memory = ($memory * 1024) * 1024;
+    }
+
+    return $memory;
 }

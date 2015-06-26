@@ -1,6 +1,7 @@
 ![Family Connections](./familyconnections/ui/img/logo.gif)
 ---
 
+[![Build Status](https://travis-ci.org/ryanhowdy/fcms.svg?branch=master)](https://travis-ci.org/ryanhowdy/fcms)
 [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/ryanhowdy/fcms/badges/quality-score.png?s=755b6ade4f4add05acf377fbaf03bb3a201f471c)](https://scrutinizer-ci.com/g/ryanhowdy/fcms/)
 
 
@@ -15,11 +16,13 @@ Because social networking sites like Facebook/Google+ are not private enough for
 * Fork the [fcms repo](https://github.com/ryanhowdy/fcms) on GitHub
 * Send a pull request (don't forget to add yourself to the [AUTHORS](https://github.com/ryanhowdy/fcms/blob/master/AUTHORS) file)
 
+We usually have a few bugs/feature requests that you can get paid to fix. Check out our list of issues labeled  [bounty](https://github.com/ryanhowdy/fcms/labels/bounty).
+
 
 
 # Installation
 
-1. Upload the familyconnections/ directory in FCMS_3.3.1.zip to your web host.
+1. Upload the familyconnections/ directory in FCMS_3.5.1.zip to your web host.
 
 2. Run the online installation script by visiting your website.
 
@@ -30,7 +33,7 @@ Because social networking sites like Facebook/Google+ are not private enough for
 
 # Upgrade
 
-## Upgrading from 2.6+ to 3.3.1
+## Upgrading from 2.6+ to 3.5.1
 
 __DO NOT DELETE *inc/config_inc.php*__
 
@@ -40,7 +43,4 @@ __DO NOT TOUCH ANY FILES IN THE FOLLOWING DIRECTORIES__
 * uploads/documents/
 * uploads/photos/memberX/
 * uploads/upimages/
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/ryanhowdy/fcms/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
